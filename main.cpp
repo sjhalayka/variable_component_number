@@ -118,16 +118,16 @@ public:
 
 
 
-class number_type
+class quintonion
 {
 public:
 
-	number_type(void)
+	quintonion(void)
 	{
 		vertex_data.resize(vertex_length, 0);
 	}
 
-	number_type(size_t var_count)
+	quintonion(size_t var_count)
 	{
 		vertex_length = var_count;
 		vertex_data.resize(vertex_length, 0);
@@ -143,9 +143,9 @@ public:
 		return sqrtf(all_self_dot);
 	}
 
-	number_type operator+(const number_type& right) const
+	quintonion operator+(const quintonion& right) const
 	{
-		number_type out(right.vertex_length);
+		quintonion out(right.vertex_length);
 
 		for (size_t i = 0; i < right.vertex_length; i++)
 			out.vertex_data[i] = vertex_data[i] + right.vertex_data[i];
@@ -153,9 +153,9 @@ public:
 		return out;
 	}
 
-	number_type operator/(const float& right) const
+	quintonion operator/(const float& right) const
 	{
-		number_type out(vertex_length);
+		quintonion out(vertex_length);
 
 		for (size_t i = 0; i < vertex_length; i++)
 			out.vertex_data[i] = vertex_data[i] / right;
@@ -163,13 +163,13 @@ public:
 		return out;
 	}
 
-	size_t vertex_length = 1; // default is one float
+	size_t vertex_length = 5; // default is one float
 	vector<float> vertex_data;
 };
 
-number_type conj_number_type(number_type& in)
+quintonion conj_number_type(quintonion& in)
 {
-	number_type out;
+	quintonion out;
 
 	out.vertex_data[0] = in.vertex_data[0];
 
@@ -179,7 +179,7 @@ number_type conj_number_type(number_type& in)
 	return out;
 }
 
-number_type pow_number_type(number_type& in, float exponent)
+quintonion pow_number_type(quintonion& in, float exponent)
 {
 	const float beta = exponent;
 
@@ -195,7 +195,7 @@ number_type pow_number_type(number_type& in, float exponent)
 	for (size_t i = 1; i < in.vertex_length; i++)
 		imag_self_dot += (in.vertex_data[i] * in.vertex_data[i]);
 
-	number_type out;
+	quintonion out;
 
 	if (all_self_dot == 0)
 	{
@@ -221,8 +221,8 @@ number_type pow_number_type(number_type& in, float exponent)
 }
 
 inline float iterate(
-	number_type Z,
-	const number_type C,
+	quintonion Z,
+	const quintonion C,
 	const short unsigned int max_iterations,
 	const float threshold)
 {
@@ -249,7 +249,7 @@ int main(void)
 	const float threshold = 4.0f;
 	const float step_size = (grid_max - grid_min) / (res - 1);
 
-	number_type C(5);
+	quintonion C;
 	C.vertex_data[0] = 0.2f;
 	C.vertex_data[1] = 0.5f;
 	C.vertex_data[2] = 0.3f;
@@ -259,7 +259,7 @@ int main(void)
 	//for (size_t i = 0; i < C.vertex_length; i++)
 	//	C.vertex_data[i] = rand() / static_cast<float>(RAND_MAX) * 0.5f;
 
-	number_type Z(5);
+	quintonion Z;
 
 	for (size_t i = 0; i < Z.vertex_length; i++)
 		Z.vertex_data[i] = grid_min;
@@ -324,7 +324,8 @@ int main(void)
 	{
 		cout << "Empty set" << endl;
 	}
-//	cout << in_set << " of " << total_count << endl;
+
+	cout << in_set << " of " << total_count << endl;
 
 
 
