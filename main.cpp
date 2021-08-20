@@ -127,12 +127,6 @@ public:
 		vertex_data.resize(vertex_length, 0);
 	}
 
-	quintonion(size_t var_count)
-	{
-		vertex_length = var_count;
-		vertex_data.resize(vertex_length, 0);
-	}
-
 	float magnitude(void)
 	{
 		float all_self_dot = 0;
@@ -145,7 +139,7 @@ public:
 
 	quintonion operator+(const quintonion& right) const
 	{
-		quintonion out(right.vertex_length);
+		quintonion out;
 
 		for (size_t i = 0; i < right.vertex_length; i++)
 			out.vertex_data[i] = vertex_data[i] + right.vertex_data[i];
@@ -155,7 +149,7 @@ public:
 
 	quintonion operator/(const float& right) const
 	{
-		quintonion out(vertex_length);
+		quintonion out;
 
 		for (size_t i = 0; i < vertex_length; i++)
 			out.vertex_data[i] = vertex_data[i] / right;
@@ -163,7 +157,7 @@ public:
 		return out;
 	}
 
-	size_t vertex_length = 5; // default is one float
+	size_t vertex_length = 5;
 	vector<float> vertex_data;
 };
 
