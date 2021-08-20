@@ -84,7 +84,7 @@ number_type pow_number_type(number_type &in, float exponent)
 
 	number_type out;
 
-	if (all_self_dot == 0)
+	if (all_self_dot == 0 || imag_self_dot == 0)
 	{
 		for (size_t i = 0; i < out.vertex_length; i++)
 			out.vertex_data[i] = 0;
@@ -134,14 +134,14 @@ int main(void)
 	const float threshold = 4.0f;
 	const float step_size = (grid_max - grid_min) / (res - 1);
 
-	number_type C(5);
+	number_type C(5); // Quinternion
 
 	srand(1);
 
 	for (size_t i = 0; i < C.vertex_length; i++)
 		C.vertex_data[i] = rand() / static_cast<float>(RAND_MAX) * 0.5f;
 
-	number_type Z(5);
+	number_type Z(5); // Quinternion
 
 	for (size_t i = 0; i < Z.vertex_length; i++)
 		Z.vertex_data[i] = grid_min;
