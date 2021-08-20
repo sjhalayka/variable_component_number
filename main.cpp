@@ -1,9 +1,121 @@
 #include <cmath>
 #include <ctime>
 #include <iostream>
+#include <fstream>
 #include <vector>
-#include <complex>
+#include <set>
 using namespace std;
+
+class vertex_3
+{
+public:
+
+	inline vertex_3(void) : x(0.0f), y(0.0f), z(0.0f), index(0) { /*default constructor*/ }
+	inline vertex_3(const float src_x, const float src_y, const float src_z, const size_t src_index) : x(src_x), y(src_y), z(src_z), index(src_index) { /* custom constructor */ }
+
+	inline bool operator==(const vertex_3& right) const
+	{
+		if (right.x == x && right.y == y && right.z == z)
+			return true;
+		else
+			return false;
+	}
+
+	inline bool operator<(const vertex_3& right) const
+	{
+		if (right.x > x)
+			return true;
+		else if (right.x < x)
+			return false;
+
+		if (right.y > y)
+			return true;
+		else if (right.y < y)
+			return false;
+
+		if (right.z > z)
+			return true;
+		else if (right.z < z)
+			return false;
+
+		return false;
+	}
+
+	inline const vertex_3& operator-(const vertex_3& right) const
+	{
+		static vertex_3 temp;
+
+		temp.x = this->x - right.x;
+		temp.y = this->y - right.y;
+		temp.z = this->z - right.z;
+
+		return temp;
+	}
+
+	inline const vertex_3& operator+(const vertex_3& right) const
+	{
+		static vertex_3 temp;
+
+		temp.x = this->x + right.x;
+		temp.y = this->y + right.y;
+		temp.z = this->z + right.z;
+
+		return temp;
+	}
+
+	inline const vertex_3& operator*(const float& right) const
+	{
+		static vertex_3 temp;
+
+		temp.x = this->x * right;
+		temp.y = this->y * right;
+		temp.z = this->z * right;
+
+		return temp;
+	}
+
+	inline const vertex_3& cross(const vertex_3& right) const
+	{
+		static vertex_3 temp;
+
+		temp.x = y * right.z - z * right.y;
+		temp.y = z * right.x - x * right.z;
+		temp.z = x * right.y - y * right.x;
+
+		return temp;
+	}
+
+	inline float dot(const vertex_3& right) const
+	{
+		return x * right.x + y * right.y + z * right.z;
+	}
+
+	inline const float self_dot(void)
+	{
+		return x * x + y * y + z * z;
+	}
+
+	inline const float length(void)
+	{
+		return std::sqrtf(self_dot());
+	}
+
+	inline const void normalize(void)
+	{
+		float len = length();
+
+		if (0.0f != len)
+		{
+			x /= len;
+			y /= len;
+			z /= len;
+		}
+	}
+
+	float x, y, z;
+	size_t index;
+};
+
 
 
 class number_type
@@ -128,7 +240,9 @@ inline float iterate(
 
 int main(void)
 {
-	const size_t res = 10;
+	//srand(123);// time(0));
+
+	const size_t res = 25;
 	const float grid_max = 1.5;
 	const float grid_min = -grid_max;
 	const unsigned short int max_iterations = 8;
@@ -136,11 +250,14 @@ int main(void)
 	const float step_size = (grid_max - grid_min) / (res - 1);
 
 	number_type C(5);
+	C.vertex_data[0] = 0.2f;
+	C.vertex_data[1] = 0.5f;
+	C.vertex_data[2] = 0.3f;
+	C.vertex_data[3] = 0.2f;
+	C.vertex_data[4] = 0.1f;
 
-	srand(time(0));
-
-	for (size_t i = 0; i < C.vertex_length; i++)
-		C.vertex_data[i] = rand() / static_cast<float>(RAND_MAX) * 0.5f;
+	//for (size_t i = 0; i < C.vertex_length; i++)
+	//	C.vertex_data[i] = rand() / static_cast<float>(RAND_MAX) * 0.5f;
 
 	number_type Z(5);
 
@@ -150,8 +267,12 @@ int main(void)
 	size_t total_count = 0;
 	size_t in_set = 0;
 
+	set<vertex_3> all_points;
+
 	for (size_t i0 = 0; i0 < res; i0++, Z.vertex_data[0] += step_size)
 	{
+		cout << i0 << " of " << res << endl;
+
 		Z.vertex_data[1] = grid_min;
 
 		for (size_t i1 = 0; i1 < res; i1++, Z.vertex_data[1] += step_size)
@@ -173,15 +294,37 @@ int main(void)
 						float magnitude = iterate(Z, C, max_iterations, threshold);
 
 						if (magnitude < threshold)
+						{
 							in_set++;
-						// use z here
+
+							// Simply drop the 4th and 5th dimension
+							vertex_3 v;
+							v.x = Z.vertex_data[0];
+							v.y = Z.vertex_data[1];
+							v.z = Z.vertex_data[2];
+
+							all_points.insert(v);
+						}
 					}
 				}
 			}
 		}
 	}
 
-	cout << in_set << " of " << total_count << endl;
+	if (all_points.size() > 0)
+	{
+		ofstream outfile("points.txt");
+
+		for (set<vertex_3>::const_iterator ci = all_points.begin(); ci != all_points.end(); ci++)
+			outfile << ci->x << " " << ci->y << " " << ci->z << endl;
+
+		outfile.close();
+	}
+	else
+	{
+		cout << "Empty set" << endl;
+	}
+//	cout << in_set << " of " << total_count << endl;
 
 
 
