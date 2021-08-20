@@ -1,4 +1,5 @@
 #include <cmath>
+#include <ctime>
 #include <iostream>
 #include <vector>
 #include <complex>
@@ -29,12 +30,12 @@ public:
 
 		return sqrtf(all_self_dot);
 	}
-	
+
 	number_type operator+(const number_type& right) const
 	{
 		number_type out(right.vertex_length);
 
-		for(size_t i = 0; i < right.vertex_length; i++)
+		for (size_t i = 0; i < right.vertex_length; i++)
 			out.vertex_data[i] = vertex_data[i] + right.vertex_data[i];
 
 		return out;
@@ -66,7 +67,7 @@ number_type conj_number_type(number_type& in)
 	return out;
 }
 
-number_type pow_number_type(number_type &in, float exponent)
+number_type pow_number_type(number_type& in, float exponent)
 {
 	const float beta = exponent;
 
@@ -84,7 +85,7 @@ number_type pow_number_type(number_type &in, float exponent)
 
 	number_type out;
 
-	if (all_self_dot == 0 || imag_self_dot == 0)
+	if (all_self_dot == 0)
 	{
 		for (size_t i = 0; i < out.vertex_length; i++)
 			out.vertex_data[i] = 0;
@@ -134,14 +135,14 @@ int main(void)
 	const float threshold = 4.0f;
 	const float step_size = (grid_max - grid_min) / (res - 1);
 
-	number_type C(5); // Quinternion
+	number_type C(5);
 
-	srand(1);
+	srand(time(0));
 
 	for (size_t i = 0; i < C.vertex_length; i++)
 		C.vertex_data[i] = rand() / static_cast<float>(RAND_MAX) * 0.5f;
 
-	number_type Z(5); // Quinternion
+	number_type Z(5);
 
 	for (size_t i = 0; i < Z.vertex_length; i++)
 		Z.vertex_data[i] = grid_min;
