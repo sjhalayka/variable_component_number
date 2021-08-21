@@ -6,6 +6,12 @@
 #include <set>
 using namespace std;
 
+class vertex_4
+{
+public:
+	float x, y, z, w;
+};
+
 class vertex_3
 {
 public:
@@ -201,7 +207,7 @@ quintonion pow_number_type(quintonion& in, float exponent)
 
 	const float all_len = sqrtf(all_self_dot);
 	const float imag_len = sqrtf(imag_self_dot);
-	const float		 self_dot_beta = powf(all_self_dot, fabs_beta / 2.0f);
+	const float self_dot_beta = powf(all_self_dot, fabs_beta / 2.0f);
 
 	out.vertex_data[0] = self_dot_beta * std::cos(fabs_beta * std::acos(in.vertex_data[0] / all_len));
 
@@ -234,9 +240,7 @@ inline float iterate(
 
 int main(void)
 {
-	//srand(123);// time(0));
-
-	const size_t res = 25;
+	const size_t res = 50;
 	const float grid_max = 1.5;
 	const float grid_min = -grid_max;
 	const unsigned short int max_iterations = 8;
@@ -250,9 +254,6 @@ int main(void)
 	C.vertex_data[3] = 0.2f;
 	C.vertex_data[4] = 0.1f;
 
-	//for (size_t i = 0; i < C.vertex_length; i++)
-	//	C.vertex_data[i] = rand() / static_cast<float>(RAND_MAX) * 0.5f;
-
 	quintonion Z;
 
 	for (size_t i = 0; i < Z.vertex_length; i++)
@@ -261,11 +262,11 @@ int main(void)
 	size_t total_count = 0;
 	size_t in_set = 0;
 
-	set<vertex_3> all_points;
+	vector<vertex_3> all_points;
 
 	for (size_t i0 = 0; i0 < res; i0++, Z.vertex_data[0] += step_size)
 	{
-		cout << i0 << " of " << res << endl;
+		cout << i0 + 1 << " of " << res << endl;
 
 		Z.vertex_data[1] = grid_min;
 
@@ -291,13 +292,39 @@ int main(void)
 						{
 							in_set++;
 
-							// Simply drop the 4th and 5th dimension
-							vertex_3 v;
-							v.x = Z.vertex_data[0];
-							v.y = Z.vertex_data[1];
-							v.z = Z.vertex_data[2];
+							vertex_4 v4;
 
-							all_points.insert(v);
+							if (Z.vertex_data[4] != 0)
+							{
+								v4.x = Z.vertex_data[0] / Z.vertex_data[4];
+								v4.y = Z.vertex_data[1] / Z.vertex_data[4];
+								v4.z = Z.vertex_data[2] / Z.vertex_data[4];
+								v4.w = Z.vertex_data[3] / Z.vertex_data[4];
+							}
+							else
+							{
+								v4.x = Z.vertex_data[0];
+								v4.y = Z.vertex_data[1];
+								v4.z = Z.vertex_data[2];
+								v4.w = Z.vertex_data[3];
+							}
+
+							vertex_3 v;
+
+							if (v4.w != 0)
+							{
+								v.x = v4.x / v4.w;
+								v.y = v4.y / v4.w;
+								v.z = v4.z / v4.w;
+							}
+							else
+							{
+								v.x = v4.x;
+								v.y = v4.y;
+								v.z = v4.z;
+							}
+
+							all_points.push_back(v);
 						}
 					}
 				}
@@ -307,9 +334,11 @@ int main(void)
 
 	if (all_points.size() > 0)
 	{
+		cout << "Writing " << all_points.size() << " points" << endl;
+
 		ofstream outfile("points.txt");
 
-		for (set<vertex_3>::const_iterator ci = all_points.begin(); ci != all_points.end(); ci++)
+		for (vector<vertex_3>::const_iterator ci = all_points.begin(); ci != all_points.end(); ci++)
 			outfile << ci->x << " " << ci->y << " " << ci->z << endl;
 
 		outfile.close();
