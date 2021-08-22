@@ -182,20 +182,16 @@ quintonion conj_number_type(quintonion& in)
 quintonion pow_number_type(quintonion& in, float exponent)
 {
 	const float beta = exponent;
-
 	const float fabs_beta = fabsf(beta);
-
 	float all_self_dot = 0;
+	float imag_self_dot = 0;
+	quintonion out;
 
 	for (size_t i = 0; i < in.vertex_length; i++)
 		all_self_dot += (in.vertex_data[i] * in.vertex_data[i]);
 
-	float imag_self_dot = 0;
-
 	for (size_t i = 1; i < in.vertex_length; i++)
 		imag_self_dot += (in.vertex_data[i] * in.vertex_data[i]);
-
-	quintonion out;
 
 	if (all_self_dot == 0)
 	{
@@ -222,10 +218,19 @@ quintonion pow_number_type(quintonion& in, float exponent)
 
 inline float iterate(
 	quintonion Z,
-	const quintonion C,
+	quintonion C,
 	const short unsigned int max_iterations,
 	const float threshold)
 {
+	C = Z;
+
+	Z.vertex_data[0] = 0.0f;
+	Z.vertex_data[1] = 0.0f;
+	Z.vertex_data[2] = 0.0f;
+	Z.vertex_data[3] = 0.0f;
+	Z.vertex_data[4] = 0.0f;
+
+
 	for (short unsigned int i = 0; i < max_iterations; i++)
 	{
 		Z = pow_number_type(Z, 2.0) + C;
