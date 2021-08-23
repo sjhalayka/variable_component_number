@@ -222,13 +222,13 @@ inline float iterate(
 	const short unsigned int max_iterations,
 	const float threshold)
 {
-	C = Z;
+	//C = Z;
 
-	Z.vertex_data[0] = 0.0f;
-	Z.vertex_data[1] = 0.0f;
-	Z.vertex_data[2] = 0.0f;
-	Z.vertex_data[3] = 0.0f;
-	Z.vertex_data[4] = 0.0f;
+	//Z.vertex_data[0] = 0.0f;
+	//Z.vertex_data[1] = 0.0f;
+	//Z.vertex_data[2] = 0.0f;
+	//Z.vertex_data[3] = 0.0f;
+	//Z.vertex_data[4] = 0.0f;
 
 
 	for (short unsigned int i = 0; i < max_iterations; i++)
@@ -299,7 +299,7 @@ int main(void)
 
 							vertex_4 v4;
 
-							if (Z.vertex_data[4] != 0)
+							if (0)//Z.vertex_data[4] != 0)
 							{
 								v4.x = Z.vertex_data[0] / Z.vertex_data[4];
 								v4.y = Z.vertex_data[1] / Z.vertex_data[4];
@@ -316,7 +316,7 @@ int main(void)
 
 							vertex_3 v;
 
-							if (v4.w != 0)
+							if (0)//v4.w != 0)
 							{
 								v.x = v4.x / v4.w;
 								v.y = v4.y / v4.w;
