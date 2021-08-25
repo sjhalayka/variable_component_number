@@ -11,8 +11,8 @@ class vertex_3
 {
 public:
 
-	inline vertex_3(void) : x(0.0f), y(0.0f), z(0.0f), index(0) { /*default constructor*/ }
-	inline vertex_3(const float src_x, const float src_y, const float src_z, const size_t src_index) : x(src_x), y(src_y), z(src_z), index(src_index) { /* custom constructor */ }
+	inline vertex_3(void) : x(0.0f), y(0.0f), z(0.0f) { /*default constructor*/ }
+	inline vertex_3(const float src_x, const float src_y, const float src_z, const size_t src_index) : x(src_x), y(src_y), z(src_z) { /* custom constructor */ }
 
 	inline bool operator==(const vertex_3& right) const
 	{
@@ -114,7 +114,6 @@ public:
 	}
 
 	float x, y, z;
-	size_t index;
 };
 
 

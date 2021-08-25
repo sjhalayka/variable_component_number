@@ -18,7 +18,7 @@ int main(void)
 {
 	ofstream out_bin("points.bin", ios_base::binary);
 
-	const size_t res = 25;
+	const size_t res = 100;
 	const float grid_max = 1.5;
 	const float grid_min = -grid_max;
 	const unsigned short int max_iterations = 8;
@@ -48,6 +48,8 @@ int main(void)
 
 		for (size_t i1 = 0; i1 < res; i1++, Z.vertex_data[1] += step_size)
 		{
+			cout << "  " << i1 + 1 << " of " << res << endl;
+
 			Z.vertex_data[2] = grid_min;
 
 			for (size_t i2 = 0; i2 < res; i2++, Z.vertex_data[2] += step_size)
@@ -70,39 +72,22 @@ int main(void)
 
 							vertex_4 v4;
 
-							if (0)//Z.vertex_data[4] != 0)
-							{
-								v4.x = Z.vertex_data[0] / Z.vertex_data[4];
-								v4.y = Z.vertex_data[1] / Z.vertex_data[4];
-								v4.z = Z.vertex_data[2] / Z.vertex_data[4];
-								v4.w = Z.vertex_data[3] / Z.vertex_data[4];
-							}
-							else
-							{
-								v4.x = Z.vertex_data[0];
-								v4.y = Z.vertex_data[1];
-								v4.z = Z.vertex_data[2];
-								v4.w = Z.vertex_data[3];
-							}
+							v4.x = Z.vertex_data[0];
+							v4.y = Z.vertex_data[1];
+							v4.z = Z.vertex_data[2];
+							v4.w = Z.vertex_data[3];
 
 							vertex_3 v;
 
-							if (0)//v4.w != 0)
-							{
-								v.x = v4.x / v4.w;
-								v.y = v4.y / v4.w;
-								v.z = v4.z / v4.w;
-							}
-							else
-							{
-								v.x = v4.x;
-								v.y = v4.y;
-								v.z = v4.z;
-							}
+							v.x = v4.x;
+							v.y = v4.y;
+							v.z = v4.z;
 
 							out_bin.write(reinterpret_cast<const char*>(&v.x), sizeof(float));
 							out_bin.write(reinterpret_cast<const char*>(&v.y), sizeof(float));
 							out_bin.write(reinterpret_cast<const char*>(&v.z), sizeof(float));
+
+
 						}
 					}
 				}
